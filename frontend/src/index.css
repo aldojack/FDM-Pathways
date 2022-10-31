@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body{
+    color: #212529;
+    background-color: #F8F8F8;
+}
+
+.hero-text{
+    text-shadow: 2px 2px 2px #202025;
+}
+
+.game{
+    height: 250px;
+    border: 1px solid black;
+    width: 250px;
+}
