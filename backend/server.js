@@ -21,7 +21,7 @@ app.get('/account',async (req,res) => {
     try{
         await client.connect();
         const db = client.db('FDM');
-        const users = db.collection('Users');
+        const users = db.collection('users');
 
         const returnedUsers =  await users.find().toArray();
         res.send(returnedUsers);
