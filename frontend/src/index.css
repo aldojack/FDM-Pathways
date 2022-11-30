@@ -16,3 +16,10 @@ body{
     border: 1px solid black;
     width: 250px;
 }
+
+.auth-modal input[type=password], .auth-modal input[type=email] {
+    padding: 8px;
+    background-color: #F8F8F8;
+    margin: 8px;
+    font-size: 17px;
+}
