@@ -1,3 +1,4 @@
+import fdm from '../assets/fdm-star.svg'
 export default function Nav({setShowModal, showModal,setIsSignUp}){
 
     const loginClick = () => {
@@ -14,8 +15,7 @@ export default function Nav({setShowModal, showModal,setIsSignUp}){
 
         <nav className="flex justify-between items-center p-4 lg:p-8 bg-black text-white min-h-full">
             <div className="logo-container">
-                <h1 className="font-bold text-2xl lg:text-3xl">FDM Group</h1>
-                {/* <img src="./star.png"/> */}
+                <a href='/'><img src={fdm} className="w-1/4"></img></a>
             </div>
             <ul className="signup-container flex space-x-2 text-base lg:text-lg">
                 <li>
