@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from 'axios';
-import {useNavigate} from 'react-router-dom'
+import {redirect} from 'react-router-dom';
+import {useCookies} from 'react-cookie';
 
 
 const AuthModal = ({setShowModal, isSignUp}) => {
@@ -12,26 +13,34 @@ const AuthModal = ({setShowModal, isSignUp}) => {
     const [password,  setPassword] = useState(null);
     const [confirmPassword,  setConfirmPassword] = useState(null);
     const [error,  setError] = useState(null);
+    const [cookie,  setCookie, removeCookie] = useCookies(['user']);
 
-    let navigate = useNavigate();
+    // let navigate = useNavigate();
 
     const handleClick = () => {
         setShowModal(false)
     }
     const handleSubmit = async (e) => {
-        // uncomment for client side validation of password/email
         e.preventDefault();
+
         try{
-            if(isSignUp && (password !== confirmPassword) || (email !== confirmEmail)){
-                setError("Please check your email and passwords match");
-                return
+            if(isSignUp){
+                if(password !== confirmPassword || email !== confirmEmail){
+                    setError("Please check your email and passwords match");
+                    return
+                }
             }
             
-            const response = await axios.post('http://localhost:8000/register', {firstName, lastName, email, password});
-            const success = response.status == 201
+            const response = await axios.post(`http://localhost:8000/${isSignUp ? 'register' : 'login'}`, {firstName, lastName, email, password});
+            // setCookie('Email', response.data.email);
+            // setCookie('UserId', response.data.user_id);
+            setCookie('AuthToken', response.data.token);
+            const success = response.status == 201;
+
             if(success) {
-                setShowModal(false)
-                navigate('/');
+                setShowModal(false);
+                return redirect('/');
+                // return redirect('/dashboard');
             }
 
         } catch(error){
