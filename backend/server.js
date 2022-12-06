@@ -28,15 +28,17 @@ app.post('/register',async (req,res) => {
         const users = db.collection('Users');
 
         const existingUser = await users.findOne({email});
+
         if(existingUser){
             return res.status(409).send('Email already exists, please login');
         }
+
         const generateUserId = uuidv4();
         const sanitizedFirstName = firstName.toLowerCase();
         const sanitizedLastName = lastName.toLowerCase();
         const hashedPassword = await bcrypt.hash(password, 10);
         const sanitizedEmail = email.toLowerCase();
-        
+
         const data = {
             user_id: generateUserId, 
             firstName: sanitizedFirstName,
@@ -49,14 +51,41 @@ app.post('/register',async (req,res) => {
         const token = jwt.sign(newUser, sanitizedEmail, {
             expiresIn: 60 *24,
         })
-        res.status(201).json({token, userId: generateUserId, email: sanitizedEmail})
+        // res.status(201).json({token, userId: generateUserId, email: sanitizedEmail})
+        res.status(201).json({token})
     } catch(err){
         console.log(err);
     }
 })
 
-app.post('/login',(req,res) => {
-    res.send("Hello from login");
+app.post('/login',async (req,res) => {
+    const client = new MongoClient(uri);
+    const {email, password} = req.body;
+
+    try{
+        await client.connect();
+        const db = client.db('FDM');
+        const users = db.collection('Users');
+
+        const user = await users.findOne({email})
+        console.log(user)
+        const correctPassword = await bcrypt.compare(password, user.password);
+        console.log(password)
+        console.log(correctPassword)
+
+
+
+        if(user && correctPassword){
+            const token = jwt.sign(user, email, {
+                expiresIn: 60 * 24
+            })
+            // res.status(201).json({token, userId: user.user_id, email})
+            res.status(201).json({token})
+        }
+        res.status(400).send('Invalid Credentials')
+    } catch(err){
+        console.log(err);
+    }
 })
 
 app.get('/users',async (req,res) => {
