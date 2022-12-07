@@ -52,7 +52,7 @@ app.post('/register',async (req,res) => {
             expiresIn: 60 *24,
         })
         // res.status(201).json({token, userId: generateUserId, email: sanitizedEmail})
-        res.status(201).json({token, user_id: user.user_id})
+        res.status(201).json({token, user_id: generateUserId})
     } catch(err){
         console.log(err);
     }
@@ -76,12 +76,13 @@ app.post('/login',async (req,res) => {
             const token = jwt.sign(user, email, {
                 expiresIn: 60 * 24
             })
-            // res.status(201).json({token, userId: user.user_id, email})
             res.status(201).json({token, user_id: user.user_id})
         }
-        res.status(400).send('Invalid Credentials')
+        else res.status(400).json('Invalid Credentials');
     } catch(err){
         console.log(err);
+    } finally{
+        await client.close();
     }
 })
 
