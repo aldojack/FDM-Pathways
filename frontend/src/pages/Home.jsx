@@ -3,14 +3,17 @@ import Header from "../components/Header";
 import Body from "../components/Body";
 import AuthModal from "../components/AuthModal";
 import { useState } from "react";
+import { useCookies } from 'react-cookie';
 
 
 export default function Home() {
     const [showModal, setShowModal] = useState(false);
     const [isSignUp, setIsSignUp] = useState(false);
+    const [cookies,  setCookie, removeCookie] = useCookies(['user']);
+  
+    const AuthToken = cookies.AuthToken;
 
     function handleClick() {
-        console.log('Clicked');
         setShowModal(true);
         setIsSignUp(true);
     }
@@ -21,10 +24,13 @@ export default function Home() {
             setShowModal={setShowModal} 
             showModal={showModal}
             setIsSignUp={setIsSignUp}
+            cookies={cookies}
+            removeCookie={removeCookie}
+            AuthToken={AuthToken}
         />
-        <Header/>
+        <Header handleClick={handleClick} AuthToken={AuthToken}/>
         <div>                
-            <Body/>
+            <Body handleClick={handleClick} AuthToken={AuthToken}/>
             {showModal && (
                 <AuthModal
                     setShowModal={setShowModal}

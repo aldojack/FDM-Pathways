@@ -1,9 +1,17 @@
 import fdm from '../assets/fdm-star.svg'
-export default function Nav({setShowModal, showModal,setIsSignUp}){
+
+export default function Nav({setShowModal, showModal,setIsSignUp, cookies, removeCookie, AuthToken}){
 
     const loginClick = () => {
         setShowModal(true)
         setIsSignUp(false)
+    }
+
+    const logout = () => {
+        removeCookie('AuthToken', cookies.AuthToken);
+        removeCookie('UserId', cookies.UserId);
+        window.location.reload();
+        return;
     }
 
     const registerClick = () => {
@@ -18,12 +26,19 @@ export default function Nav({setShowModal, showModal,setIsSignUp}){
                 <a href='/'><img src={fdm} className="w-1/4"></img></a>
             </div>
             <ul className="signup-container flex space-x-2 text-base lg:text-lg">
+            {!AuthToken && 
+            <>
                 <li>
-                    <a className="hover:underline focus:underline cursor-pointer" onClick={loginClick}>Login</a>
+                    <button  className="hover:underline focus:underline cursor-pointer" onClick={loginClick}>Login</button>
                 </li>
                 <li>
-                    <a className="hover:underline focus:underline cursor-pointer" onClick={registerClick}>Register</a>
+                    <button className="hover:underline focus:underline cursor-pointer" onClick={registerClick}>Register</button>
                 </li>
+            </>}
+            {AuthToken && 
+                <li>
+                    <button className="hover:underline focus:underline cursor-pointer" onClick={logout}>Logout</button>
+                </li>}
             </ul>
         </nav>
     )

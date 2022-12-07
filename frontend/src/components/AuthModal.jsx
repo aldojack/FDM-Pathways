@@ -13,7 +13,7 @@ const AuthModal = ({setShowModal, isSignUp}) => {
     const [password,  setPassword] = useState(null);
     const [confirmPassword,  setConfirmPassword] = useState(null);
     const [error,  setError] = useState(null);
-    const [cookie,  setCookie, removeCookie] = useCookies(['user']);
+    const [cookies,  setCookie, removeCookie] = useCookies(['user']);
 
     // let navigate = useNavigate();
 
@@ -32,14 +32,16 @@ const AuthModal = ({setShowModal, isSignUp}) => {
             }
             
             const response = await axios.post(`http://localhost:8000/${isSignUp ? 'register' : 'login'}`, {firstName, lastName, email, password});
-            // setCookie('Email', response.data.email);
+
+            console.log(response)
             setCookie('UserId', response.data.user_id);
             setCookie('AuthToken', response.data.token);
             const success = response.status == 201;
 
             if(success) {
                 setShowModal(false);
-                return redirect('/');
+                window.location.reload();
+                // return redirect('/');
                 // return redirect('/dashboard');
             }
 
