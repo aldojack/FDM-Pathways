@@ -86,6 +86,24 @@ app.post('/login',async (req,res) => {
     }
 })
 
+app.get('/user', async (req, res) => {
+    const client = new MongoClient(uri)
+    const userId = req.query.userId
+
+    try {
+        await client.connect()
+        const database = client.db('FDM')
+        const users = database.collection('Users')
+
+        const query = {user_id: userId}
+        const user = await users.findOne(query)
+        res.send(user)
+
+    } finally {
+        await client.close()
+    }
+})
+
 app.get('/users',async (req,res) => {
     //Once signed in then display users details
     const client = new MongoClient(uri);
@@ -97,6 +115,23 @@ app.get('/users',async (req,res) => {
 
         const returnedUsers =  await users.find().toArray();
         res.send(returnedUsers);
+    }
+    finally{
+        await client.close();
+    }
+})
+
+app.get('/games',async (req,res) => {
+    
+    const client = new MongoClient(uri);
+
+    try{
+        await client.connect();
+        const db = client.db('FDM');
+        const games = db.collection('Games');
+
+        const allGames =  await games.find().toArray();
+        res.send(allGames);
     }
     finally{
         await client.close();
