@@ -1,7 +1,7 @@
 import fdm from '../assets/fdm-star.svg'
 
-export default function Nav({setShowModal, showModal,setIsSignUp, cookies, removeCookie, AuthToken}){
-
+export default function Nav({setShowModal, showModal,setIsSignUp, cookies, removeCookie, AuthToken, User}){
+    //Current gets the user to the nav but may not be needed
     const loginClick = () => {
         setShowModal(true)
         setIsSignUp(false)
@@ -36,9 +36,14 @@ export default function Nav({setShowModal, showModal,setIsSignUp, cookies, remov
                 </li>
             </>}
             {AuthToken && 
+            <>
+                <li>
+                    <button className="hover:underline focus:underline cursor-pointer">Account</button>
+                </li>
                 <li>
                     <button className="hover:underline focus:underline cursor-pointer" onClick={logout}>Logout</button>
-                </li>}
+                </li>
+            </>}
             </ul>
         </nav>
     )
