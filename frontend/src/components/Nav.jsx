@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import fdm from '../assets/fdm-star.svg'
 
 export default function Nav({setShowModal, showModal,setIsSignUp, cookies, removeCookie, AuthToken, User}){
@@ -23,7 +24,7 @@ export default function Nav({setShowModal, showModal,setIsSignUp, cookies, remov
 
         <nav className="flex justify-between items-center p-4 lg:p-8 bg-black text-white min-h-full">
             <div className="logo-container">
-                <a href='/'><img src={fdm} className="w-1/4"></img></a>
+                <Link to="/"><img src={fdm} className="w-1/4"></img></Link>
             </div>
             <ul className="signup-container flex space-x-2 text-base lg:text-lg">
             {!AuthToken && 
@@ -38,7 +39,7 @@ export default function Nav({setShowModal, showModal,setIsSignUp, cookies, remov
             {AuthToken && 
             <>
                 <li>
-                    <button className="hover:underline focus:underline cursor-pointer">Account</button>
+                    <Link to="/dashboard" className='hover:underline focus:underline cursor-pointer'>Account</Link>
                 </li>
                 <li>
                     <button className="hover:underline focus:underline cursor-pointer" onClick={logout}>Logout</button>

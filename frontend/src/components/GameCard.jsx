@@ -1,6 +1,7 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
-export default function GameLink({AuthToken, PlaceholderImg, Name, Description}) {
+export default function GameCard({AuthToken, PlaceholderImg, Name, Description}) {
   
   return (
     <div className="game sm:col-span-12 md:col-span-6 lg:col-span-4 justify-self-center">
@@ -11,7 +12,7 @@ export default function GameLink({AuthToken, PlaceholderImg, Name, Description})
             <p className='image_description text-sm mt-1'>{Description}</p>
           </div>
         </div>
-        {AuthToken &&  <button className="outline-none bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl px-4 py-1 mt-6 hover:from-purple-600 hover:to-blue-600 text-white font-bold"><a href="#">Play</a></button>}
+        {AuthToken &&  <Link to={`/games/${Name}`} className='outline-none bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl px-4 py-1 mt-6 hover:from-purple-600 hover:to-blue-600 text-white font-bold'>Play</Link>}
     </div>
   )
 }
