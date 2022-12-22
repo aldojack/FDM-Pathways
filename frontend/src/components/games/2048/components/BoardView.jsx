@@ -2,11 +2,13 @@ import {useState} from 'react'
 import Tile from './Tile'
 import Cell from './Cell'
 import {Board} from '../helper';
+import Timer from '../../../Timer';
 import useEvent from '../../../../../hooks/useEvent';
 import GameOverlay from './GameOverlay';
 
 export default function BoardView() {
     const [board, setBoard] = useState(new Board());
+    const [isActive, setIsActive] = useState(true);
 
 
     const handleKeyDown = (event) => {
@@ -37,6 +39,7 @@ export default function BoardView() {
     })
 
     const resetGame = () => {
+      setIsActive(true)
       setBoard(new Board());
     }
 
@@ -44,10 +47,10 @@ export default function BoardView() {
     <div className='body'>
       <div>
         <div className='details-box'>
-          <div className='resetButton' onClick={resetGame}>New Game</div>
+          <div className='resetButton' onClick={resetGame}>{isActive ? "Reset Game" : "New Game"}</div>
           <div className='score-box'>
             <div className='score-header'>Time: </div>
-            <div>2:00</div>
+            <Timer isActive={isActive} setIsActive={setIsActive}/>
           </div>
           <div className='score-box'>
             <div className='score-header'>SCORE: </div>
@@ -57,7 +60,7 @@ export default function BoardView() {
           <div className='board'>
             {cells}
             {tiles}
-            <GameOverlay onRestart={resetGame} board={board}/>
+            <GameOverlay setIsActive={setIsActive} onRestart={resetGame} board={board}/>
           </div>
       </div>
     </div>

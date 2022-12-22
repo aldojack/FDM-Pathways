@@ -1,9 +1,11 @@
 import React from 'react'
 import TryAgainLogo from '../assets/img/try-again.gif'
-export default function GameOverlay({onRestart, board}) {
+export default function GameOverlay({onRestart, board, setIsActive}) {
     if(board.hasWon()){
+        setIsActive(false);
         return<div className='tile2048'></div>
     } else if(board.hasLost()){
+        setIsActive(false);
         return(
         <div className='gameOver' onClick={onRestart}>
             <img 
