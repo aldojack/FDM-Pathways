@@ -40,11 +40,16 @@ app.post('/register',async (req,res) => {
         const sanitizedEmail = email.toLowerCase();
 
         const data = {
-            user_id: generateUserId, 
+            userId: generateUserId, 
             firstName: sanitizedFirstName,
             lastName: sanitizedLastName,
             email: sanitizedEmail, 
-            password: hashedPassword
+            password: hashedPassword,
+            highScores: {
+                game2048: 0,
+                gameTwo: 0, 
+                gameThree: 0
+            }
         }
         const newUser = await users.insertOne(data);
         //Sign up for secret key
@@ -52,7 +57,7 @@ app.post('/register',async (req,res) => {
             expiresIn: 60 *24,
         })
         // res.status(201).json({token, userId: generateUserId, email: sanitizedEmail})
-        res.status(201).json({token, user_id: generateUserId})
+        res.status(201).json({token, userId: generateUserId})
     } catch(err){
         console.log(err);
     }
@@ -76,7 +81,7 @@ app.post('/login',async (req,res) => {
             const token = jwt.sign(user, email, {
                 expiresIn: 60 * 24
             })
-            res.status(201).json({token, user_id: user.user_id})
+            res.status(201).json({token, userId: user.userId})
         }
         else res.status(400).json('Invalid Credentials');
     } catch(err){
@@ -88,20 +93,36 @@ app.post('/login',async (req,res) => {
 
 app.get('/user', async (req, res) => {
     const client = new MongoClient(uri)
-    const userId = req.query.userId
-
+    const {userId} = req.query    
     try {
         await client.connect()
         const database = client.db('FDM')
         const users = database.collection('Users')
-
-        const query = {user_id: userId}
+        const query = {userId: userId}
         const user = await users.findOne(query)
+        console.log(user)
         res.send(user)
 
     } finally {
         await client.close()
     }
+})
+
+app.put('/user/game/score', async(req,res) => {
+    const client = new MongoClient(uri);
+    const { userId, gameName, score } = req.body;
+try {
+    const db = client.db('FDM');
+    const users = db.collection('Users');
+    const user = await users.findOne({userId});
+    await users.updateOne({ userId }, { $set: { "highScores":{...user.highScores, [gameName]: score} } });
+    res.send("Score updated successfully!");
+} catch (err) {
+    res.status(500).send(err);
+} finally {
+    await client.close();
+}
+
 })
 
 app.get('/users',async (req,res) => {
@@ -135,6 +156,23 @@ app.get('/games',async (req,res) => {
     }
     finally{
         await client.close();
+    }
+})
+
+app.get('/game', async (req, res) => {
+    const client = new MongoClient(uri)
+    const gameName = req.query.gameName
+    try {
+        await client.connect()
+        const database = client.db('FDM')
+        const games = database.collection('Games')
+
+        const query = {name: gameName}
+        const game = await games.findOne(query)
+        res.send(game)
+
+    } finally {
+        await client.close()
     }
 })
 

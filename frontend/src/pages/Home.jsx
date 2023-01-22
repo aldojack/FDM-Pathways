@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom'
 export default function Home({handleClick, AuthToken, showModal, setShowModal, isSignUp}) {
 
     return (
-      <div>  
         <main className="max-w-sm  lg:max-w-5xl mx-auto">
         {AuthToken ?  
         <>
@@ -45,14 +44,12 @@ export default function Home({handleClick, AuthToken, showModal, setShowModal, i
             </section>
           </>
         }
-
+        {showModal && (
+            <AuthModal
+                setShowModal={setShowModal}
+                isSignUp={isSignUp}  
+            />
+        )}
         </main>
-            {showModal && (
-                <AuthModal
-                    setShowModal={setShowModal}
-                    isSignUp={isSignUp}  
-                />
-            )}
-      </div>
     )
   }

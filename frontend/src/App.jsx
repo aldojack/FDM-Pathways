@@ -4,7 +4,6 @@ import Games from "./pages/Games";
 import NotFound from "./pages/error/NotFound";
 import Nav from "./components/Nav";
 import Header from "./components/Header";
-import Game from "./components/Game";
 import {Routes, Route} from 'react-router-dom'
 import axios from 'axios';
 import { useState, useEffect } from "react";
@@ -14,24 +13,30 @@ import Game2048 from "./pages/games/Game2048";
 
 export default function App() {
   const [cookies,  setCookie, removeCookie] = useCookies(['user']);
+  const AuthToken = cookies.AuthToken;
   const [showModal, setShowModal] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const [user, setUser] = useState(null);
-  const AuthToken = cookies.AuthToken;
   const [games, setGames] = useState(null);
 
   useEffect(() => {
     if(AuthToken){
-        const getUser = async() => {
-            const userId = cookies.UserId;
-            const response = await axios.get('http://localhost:8000/user', userId);
-            setUser(response.data);
+      const userId = cookies.UserId
+      const getUser = async () => {
+        try {
+            const response = await axios.get('http://localhost:8000/user', {
+                params: {userId}
+            })
+            setUser(response.data)
+        } catch (error) {
+            console.log(error)
         }
+    }
         getUser();
     }
 },[])
 
-
+//Maybe extract this to the Games page rather than pass as prop
 useEffect(() => {
   if(AuthToken){
       const getGames = async() => {
@@ -68,9 +73,10 @@ function handleClick() {
       <Route path="/dashboard" element={<Dashboard/>}/>
       <Route path="/games">
         <Route index element={<Games AuthToken={AuthToken} Games={games}/>}/>
-        <Route path="2048" element={<Game2048/>}/>
-        <Route path="*" element={<NotFound/>} />
+        <Route path="2048" element={<Game2048 AuthToken={AuthToken}/>}/>
       </Route>
+        {/* Catching unmatched routes */}
+        <Route path="*" element={<NotFound/>} />
     </Routes>
     </>
   )

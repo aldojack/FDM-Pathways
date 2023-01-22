@@ -1,6 +1,5 @@
 import { useState } from "react";
 import axios from 'axios';
-import {redirect} from 'react-router-dom';
 import {useCookies} from 'react-cookie';
 
 
@@ -32,15 +31,15 @@ const AuthModal = ({setShowModal, isSignUp}) => {
             }
             
             const response = await axios.post(`http://localhost:8000/${isSignUp ? 'register' : 'login'}`, {firstName, lastName, email, password});
-
-            console.log(`From Auth Modal ${response}`)
-            setCookie('UserId', response.data.user_id);
+            console.log(response)
+            setCookie('UserId', response.data.userId);
             setCookie('AuthToken', response.data.token);
             const success = response.status == 201;
 
             if(success) {
                 setShowModal(false);
                 window.location.reload();
+                //maybe use navigate
                 // return redirect('/');
                 // return redirect('/dashboard');
             }
