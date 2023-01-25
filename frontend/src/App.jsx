@@ -9,6 +9,7 @@ import axios from 'axios';
 import { useState, useEffect } from "react";
 import {useCookies} from 'react-cookie';
 import Game2048 from "./pages/games/Game2048";
+import Pairs from "./pages/games/Pairs";
 
 
 export default function App() {
@@ -74,6 +75,7 @@ function handleClick() {
       <Route path="/games">
         <Route index element={<Games AuthToken={AuthToken} Games={games}/>}/>
         <Route path="2048" element={<Game2048 AuthToken={AuthToken}/>}/>
+        <Route path="pairs" element={<Pairs AuthToken={AuthToken}/>}/>
       </Route>
         {/* Catching unmatched routes */}
         <Route path="*" element={<NotFound/>} />

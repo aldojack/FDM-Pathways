@@ -1,0 +1,33 @@
+.card .front {
+    /* display: none; */
+    transform: rotateY(90deg);
+    transition: all ease-in 0.2s;
+    position: absolute;
+}
+
+.flipped .front{
+    /* display: block; */
+    transform: rotateY(0deg);
+    transition-delay: 0.2s;
+}
+
+.card .back {
+    transition: all ease-in 0.2s;
+    transition-delay: 0.2s;
+}
+
+.flipped .back{
+    transform: rotateY(90deg);
+    transition-delay: 0s;
+}
+
+.resetButton {
+    background-color: #3C08FF;
+    color: rgba(255, 255, 255, 0.5);
+    color: white;
+    cursor: pointer;
+    font-size: 25px;
+    padding: 10px 20px;
+    border-radius: 7px;
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
