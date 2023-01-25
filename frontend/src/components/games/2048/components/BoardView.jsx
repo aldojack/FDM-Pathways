@@ -13,10 +13,10 @@ export default function BoardView() {
   
     const [cookies,  setCookie, removeCookie] = useCookies(['user']);
     const AuthToken = cookies.AuthToken;
-    const [board, setBoard] = useState(new Board());
     const [user, setUser] = useState(null);
+    const [board, setBoard] = useState(new Board());
     const [isActive, setIsActive] = useState(true);
-    const [counter, setCounter] = useState(10);
+    const [counter, setCounter] = useState(120);
     const [currentScore, setCurrentScore] = useState(board.score);
     const [highScore, setHighScore] = useState(0);
 
@@ -101,14 +101,14 @@ export default function BoardView() {
     const resetGame = () => {
       setIsActive(true)
       setBoard(new Board());
-      setCounter(10);
+      setCounter(120);
     }
 
   return (
     <div className='body'>
       <div>
         <div className='details-box'>
-          <div className='resetButton' onClick={resetGame}>{isActive ? "Reset Game" : "New Game"}</div>
+          <button className='resetButton' onClick={resetGame}>{isActive ? "Reset Game" : "New Game"}</button>
           <div className='score-box'>
             <div className='score-header'>Time: </div>
             <Timer isActive={isActive} setIsActive={setIsActive} counter={counter} setCounter={setCounter}/>
