@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import {useCookies} from 'react-cookie';
 import Game2048 from "./pages/games/Game2048";
 import Pairs from "./pages/games/Pairs";
+import Blackout from "./pages/games/Blackout";
 
 
 export default function App() {
@@ -71,11 +72,12 @@ function handleClick() {
     <Routes>
       <Route path="/" element={<Home handleClick={handleClick} AuthToken={AuthToken} showModal={showModal} setShowModal={setShowModal} isSignUp={isSignUp}/>}/>
       {/* Dashboard and Games will need auth so only signed in users can view */}
-      <Route path="/dashboard" element={<Dashboard/>}/>
+      <Route path="/dashboard" element={<Dashboard User={user}/>}/>
       <Route path="/games">
         <Route index element={<Games AuthToken={AuthToken} Games={games}/>}/>
         <Route path="2048" element={<Game2048 AuthToken={AuthToken}/>}/>
         <Route path="pairs" element={<Pairs AuthToken={AuthToken}/>}/>
+        <Route path="blackout" element={<Blackout AuthToken={AuthToken}/>}/>
       </Route>
         {/* Catching unmatched routes */}
         <Route path="*" element={<NotFound/>} />
