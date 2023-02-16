@@ -6,7 +6,7 @@ import Timer from "../../Timer";
 import Cell from "./Cell";
 
 //Set grid size
-const size = 6; 
+const size = 6;
 const chanceLightStartsOn = 0.25;
 
 function Board() {
@@ -17,6 +17,7 @@ function Board() {
   const [currentScore, setCurrentScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
   const [isActive, setIsActive] = useState(true);
+  const [isLightsOffCount, setIsLightsOffCount] = useState(0);
 
   //Will get the user and update the user state and high score
   useEffect(() => {
@@ -39,30 +40,25 @@ function Board() {
 
   useEffect(() => {
     //If counter reaches 0 then check
-    if(counter <= 0)
-    {
+    if (counter <= 0) {
       //Check if all lights are out then compare current score with high score
-      if(hasWon())
-      {
+      if (hasWon()) {
         //If all lights are out is the players high score more than the current
         //If so then set that score
-        if(highScore < currentScore)
-        {
+        if (highScore < currentScore) {
           setHighScore(currentScore);
         }
       }
       //Else if timer is at 0 and the player hasn't won then reset player score
-      else{
-        setCurrentScore(0)
-        setIsActive(false)
+      else {
+        setCurrentScore(0);
+        setIsActive(false);
       }
     }
 
-    if(hasWon())
-    {
-      setCurrentScore(5000)
-      if(highScore < currentScore)
-      {
+    if (hasWon()) {
+      setCurrentScore(5000);
+      if (highScore < currentScore) {
         setHighScore(currentScore);
       }
 
@@ -74,9 +70,13 @@ function Board() {
           );
         };
         updateScore();
-      } 
+      }
     }
-  },[counter, isActive])
+  }, [counter, isActive]);
+
+  useEffect(() => {
+    setCurrentScore(Math.ceil((isLightsOffCount / (size * size)) * 100));
+  }, [isLightsOffCount]);
 
   /** randomLight: returns random boolean */
   function randomLight() {
@@ -99,14 +99,26 @@ function Board() {
     cellRowIndex = parseInt(cellRowIndex);
     cellColIndex = parseInt(cellColIndex);
 
-    setBoard((currSt) => ({
-      ...currSt,
-      grid: currSt.grid.map((row, rowIndex) =>
+    setBoard((currSt) => {
+      const newGrid = currSt.grid.map((row, rowIndex) =>
         rowIndex === cellRowIndex
           ? row.map((col, colIndex) => (colIndex === cellColIndex ? !col : col))
           : row
-      ),
-    }));
+      );
+
+      // count the number of cells with isOn set to false
+      const newOffCellsCount = newGrid.reduce(
+        (count, row) => count + row.filter((cell) => !cell).length,
+        0
+      );
+
+      setIsLightsOffCount(newOffCellsCount);
+
+      return {
+        ...currSt,
+        grid: newGrid,
+      };
+    });
   };
 
   /** toggleAllLights: toggles clicked-on light and its neighbours */
@@ -127,12 +139,11 @@ function Board() {
     //setscore to 5000 as the maximum high score
     const lightsOut = board.grid.every((row) => row.every((cell) => cell));
 
-    if(isActive && lightsOut)
-    {
+    if (isActive && lightsOut) {
       setIsActive(false);
     }
-  
-    return lightsOut ? true : false
+
+    return lightsOut ? true : false;
     // return board.grid.every((row) => row.every((cell) => cell));
   }
 
@@ -174,11 +185,21 @@ function Board() {
             </div>
             <div className="score-box">
               <div className="score-header">SCORE: </div>
-              <div>{currentScore}</div>
+              <div>{currentScore}%</div>
             </div>
             <div className="score-box">
               <div className="score-header">BEST: </div>
               <div>{highScore || 0}</div>
+            </div>
+          </div>
+          <div className="w-full mb-2">
+            <div className="max-w-lg">
+              <div className="w-full h-6 bg-gray-200 rounded-full dark:bg-gray-700">
+                <div
+                  className="h-6  bg-gradient-to-r from-[#116ff7] via-[#3c08ff] to-[#942dff] rounded-full"
+                  style={{width: currentScore ? `${currentScore}%` : '0%'}}
+                ></div>
+              </div>
             </div>
           </div>
           <div className="flex flex-col rounded-lg p-1 border-2 border-solid border-black items-center max-w-lg">
