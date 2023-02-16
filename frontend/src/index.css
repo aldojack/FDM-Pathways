@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 
+    Ghost White - #EDF1FF 
+    Rich Black - #141E28
+    Dodger Blue - #116FF7
+    Ultramarine - #3C08FF
+    Vivid Violet - #942DFF
+*/
+
+
 body{
     color: #212529;
     background-color: #F8F8F8;

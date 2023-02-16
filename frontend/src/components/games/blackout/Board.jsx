@@ -196,7 +196,7 @@ function Board() {
             <div className="max-w-lg">
               <div className="w-full h-6 bg-gray-200 rounded-full dark:bg-gray-700">
                 <div
-                  className="h-6  bg-gradient-to-r from-[#116ff7] via-[#3c08ff] to-[#942dff] rounded-full"
+                  className="h-6  bg-gradient-to-r from-dodgerblue via-ultramarine to-vividviolet rounded-full"
                   style={{width: currentScore ? `${currentScore}%` : '0%'}}
                 ></div>
               </div>
