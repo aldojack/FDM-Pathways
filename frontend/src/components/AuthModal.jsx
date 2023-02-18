@@ -45,7 +45,8 @@ const AuthModal = ({setShowModal, isSignUp}) => {
             }
 
         } catch(error){
-            console.log(error);
+            setError(error.response.data)
+            console.log(error.response.data);
         }
     }
     return (
@@ -110,8 +111,8 @@ const AuthModal = ({setShowModal, isSignUp}) => {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                 />}
 
-                <input className="outline-none bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl px-4 py-1 mt-6 hover:from-purple-600 hover:to-blue-600 text-white font-bold" type="submit" value={isSignUp ? 'Create Account' : 'Login'}/>
-                <p className="text-red-600">{error}</p>
+                <input className="outline-none bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl px-4 py-1 mt-6 hover:from-purple-600 hover:to-blue-600 text-white font-bold cursor-pointer" type="submit" value={isSignUp ? 'Create Account' : 'Login'}/>
+                <p className="text-red-600 mt-4">{error}</p>
             </form>
         </div>
     )

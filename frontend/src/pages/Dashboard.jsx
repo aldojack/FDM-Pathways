@@ -17,7 +17,9 @@ export default function Dashboard({ User }) {
   }
 
   return (
-    <main className="max-w-sm  lg:max-w-5xl mx-auto text-center">
+    <div className="w-full">
+    <main className="max-w-5xl mx-auto text-center">
+    <div className=" bg-ghost p-3 mt-10 space-y-2">
       <h1 className="text-2xl font-bold">Dashboard</h1>
       <p>
         Name: {User.firstName} {User.lastName}
@@ -29,6 +31,8 @@ export default function Dashboard({ User }) {
       </div>
       <h2 className="text-1xl font-bold">Suggested Stream</h2>
       <p>Pending</p>
+    </div>
     </main>
+    </div>
   );
 }

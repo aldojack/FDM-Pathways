@@ -5,11 +5,11 @@ import { Link } from 'react-router-dom'
 export default function Home({handleClick, AuthToken, showModal, setShowModal, isSignUp}) {
 
     return (
-        <main className="max-w-sm  lg:max-w-5xl mx-auto">
+        <main className="w-full">
         {AuthToken ?  
         <>
 
-        <section className="mt-12 [&>p]:my-4">
+        <section className="max-w-5xl m-auto px-6 [&>p]:my-4 mt-12">
                 <h2 className=" text-2xl text-cyan-500 ">What Next?</h2>
                 <ul className="text-center font-bold mt-4">
                   <li>Want to change career?</li>
@@ -23,7 +23,7 @@ export default function Home({handleClick, AuthToken, showModal, setShowModal, i
                 </div>
             </section> 
 
-        <section className="mt-12 [&>p]:mt-4">
+        <section className="max-w-5xl m-auto px-6 [&>p]:my-4 mt-12">
                 <h2 className=" text-2xl text-cyan-500 ">The FDM Graduate Programme</h2>
                 <p>Our two-year graduate programme gives you the opportunity to kick-start your career in technology with some of the world’s largest and well-known organisations, including HSBC, Virgin Media, the Home Office, Channel 4 and many more.</p>
                 <p>Our graduate programmes begin with expert training courses, encompassing all the technical aspects of your chosen career path, as well as professional skills and working methodologies. Once you’ve completed your training, you’ll then be placed on our client’s sites as a qualified FDM Consultant, ready to get stuck into cutting-edge work.</p>
@@ -32,12 +32,12 @@ export default function Home({handleClick, AuthToken, showModal, setShowModal, i
           </>
             :
           <>
-            <section className="mt-12">
+            <section className="max-w-5xl m-auto px-6 [&>p]:my-4 mt-12">
                 <h2 className=" text-2xl text-cyan-500 ">Careers</h2>
                 <p className="mt-4">Our people are our passion at FDM. That’s why we make your training and career growth a priority. Our vibrant and diverse workforce of talented professionals is what makes FDM such a dynamic and exciting place to work.</p>
             </section>
 
-            <section className="mt-12">
+            <section className="max-w-5xl m-auto px-6 [&>p]:my-4 mt-12">
                 <h2 className=" text-2xl text-cyan-500 ">FDM Pathways</h2>
                 <p className="mt-4">At FDM we want to help you find what career suits YOU.  So we have developed 3 short mini games to analyse some key skills and suggest a potential stream for you to apply for.</p>
                 {!AuthToken && <button className="outline-none bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl px-4 py-1 mt-6 hover:from-purple-600 hover:to-blue-600 text-white font-bold"><a href="#" onClick={handleClick}>Join now</a></button>}

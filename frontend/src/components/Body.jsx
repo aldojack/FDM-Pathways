@@ -1,5 +1,6 @@
 import GamesContainer from './GamesContainer'
 
+//May need removed if not used
 export default function Body({handleClick, AuthToken}){
 
     return (
