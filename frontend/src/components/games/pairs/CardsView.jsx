@@ -23,10 +23,11 @@ function CardsView() {
   const [choiceOne, setChoiceOne] = useState(null);
   const [choiceTwo, setChoiceTwo] = useState(null);
   const [disabled, setDisabled] = useState(false);
-  const [counter, setCounter] = useState(15);
+  const [counter, setCounter] = useState(5);
   const [currentScore, setCurrentScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
   const [isActive, setIsActive] = useState(true);
+  const [resetTimer, setResetTimer] = useState(false);
 
   //Will get the user and update the user state and high score
   useEffect(() => {
@@ -54,11 +55,7 @@ function CardsView() {
       setDisabled(true);
       compareCards(choiceOne, choiceTwo);
     }
-  }, [choiceTwo]);
 
-
-  //Checks if all cards are matched and if there player is still active then shuffle cards again
-  useEffect(() => {
     const allMatched = Object.values(cards).every((card) => card.matched);
     if (allMatched && isActive) {
       turns === 5 ? setCurrentScore((prevScore) => prevScore + 1000) : null;
@@ -66,23 +63,55 @@ function CardsView() {
     }
     //If timer runs out then set an inactive and disable clicks
     //Also checks if the current score  is greater  than high score then updates
-    if (counter <= 0) {
+
+    if (!isActive) {
+      setDisabled(true);
       if (currentScore > highScore) {
         setHighScore(currentScore);
       }
-      if (!isActive) {
-        const updateScore = async () => {
-          const response = await axios.put(
-            "http://localhost:8000/user/game/score",
-            { userId: user.userId, gameName: "pairs", score: highScore }
-          );
-        };
-        updateScore();
-      } 
-      setIsActive(false);
-      setDisabled(true);
+
+      const updateScore = async () => {
+        const response = await axios.put(
+          "http://localhost:8000/user/game/score",
+          { userId: user.userId, gameName: "pairs", score: highScore }
+        );
+      };
+      updateScore();
     }
-  }, [counter]);
+    // setIsActive(false);
+  }, [choiceTwo, isActive]);
+
+  const setInactive = () => {
+    setIsActive(false);
+  }
+
+  // //Checks if all cards are matched and if there player is still active then shuffle cards again
+  // useEffect(() => {
+  //   const allMatched = Object.values(cards).every((card) => card.matched);
+  //   if (allMatched && isActive) {
+  //     turns === 5 ? setCurrentScore((prevScore) => prevScore + 1000) : null;
+  //     shuffleCards();
+  //   }
+  //   //If timer runs out then set an inactive and disable clicks
+  //   //Also checks if the current score  is greater  than high score then updates
+
+  //     if (!isActive) {
+
+  //       if (currentScore > highScore) {
+  //         setHighScore(currentScore);
+  //       }
+
+  //       const updateScore = async () => {
+  //         const response = await axios.put(
+  //           "http://localhost:8000/user/game/score",
+  //           { userId: user.userId, gameName: "pairs", score: highScore }
+  //         );
+  //       };
+  //       updateScore();
+  //     }
+  //     setIsActive(false);
+  //     setDisabled(true);
+  // }, [counter]);
 
   //shuffle cards
   //Maybe change  the id to UUID
@@ -127,9 +156,12 @@ function CardsView() {
   const resetGame = () => {
     setIsActive(true);
     shuffleCards();
+    setDisabled(false);
     setTurns(0);
     setCurrentScore(0);
-    setCounter(15);
+    setCounter(120);
+    setResetTimer(true);
+    setTimeout(() => setResetTimer(false), 0);
     cardDelay();
   };
 
@@ -138,8 +170,7 @@ function CardsView() {
       setChoiceOne(null);
       setChoiceTwo(null);
       setDisabled(false);
-    }
-    else{
+    } else {
       setTurns((prevTurns) => prevTurns + 1);
     }
   };
@@ -165,9 +196,9 @@ function CardsView() {
             <div className="score-header">Time: </div>
             <Timer
               isActive={isActive}
-              setIsActive={setIsActive}
-              counter={counter}
-              setCounter={setCounter}
+              setIsActive={setInactive}
+              initialCounter={counter}
+              resetTimer={resetTimer}
             />
           </div>
           <div className="score-box">

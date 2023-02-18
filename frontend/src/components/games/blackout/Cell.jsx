@@ -1,10 +1,12 @@
-function Cell({ cellIndex, isOn, toggleLight }){
+function Cell({ cellIndex, isOn, toggleLight, disabled }){
 
     const styles = isOn ? "bg-yellow-300 shadow-lg" : "bg-black"
 
     function handleToggleLight() {
-        toggleLight(cellIndex);
-        
+        if(!disabled)
+        {
+            toggleLight(cellIndex);   
+        }
     }
 
     return (

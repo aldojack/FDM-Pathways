@@ -13,11 +13,14 @@ function Board() {
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
   const AuthToken = cookies.AuthToken;
   const [user, setUser] = useState(null);
-  const [counter, setCounter] = useState(120);
+  const [counter, setCounter] = useState(5);
   const [currentScore, setCurrentScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
   const [isActive, setIsActive] = useState(true);
   const [isLightsOffCount, setIsLightsOffCount] = useState(0);
+  const [resetTimer, setResetTimer] = useState(false);
+  const [disabled, setDisabled] = useState(false);
+
 
   //Will get the user and update the user state and high score
   useEffect(() => {
@@ -38,45 +41,92 @@ function Board() {
     }
   }, []);
 
+  // useEffect(() => {
+  //   //If player is not active
+  //   if (!isActive) {
+  //     //Check if all lights are out then compare current score with high score
+  //     if (hasWon()) {
+  //       //If all lights are out is the players high score more than the current
+  //       //If so then set that score
+  //       setCurrentScore(10000);
+  //       if (highScore < currentScore) {
+  //         setHighScore(currentScore);
+  //       }
+  //     }
+  //     //Else if timer is at 0 and the player hasn't won then reset player score
+  //     else {
+  //       if (highScore < currentScore) {
+  //         setHighScore(currentScore);
+  //       }
+  //       setCurrentScore(0);
+  //     }
+  //   }
+
+  //   if (hasWon()) {
+  //     setCurrentScore(5000);
+  //     if (highScore < currentScore) {
+  //       setHighScore(currentScore);
+  //     }
+
+  //     if (!isActive && currentScore > highScore) {
+  //       const updateScore = async () => {
+  //         const response = await axios.put(
+  //           "http://localhost:8000/user/game/score",
+  //           { userId: user.userId, gameName: "blackout", score: highScore }
+  //         );
+  //       };
+  //       updateScore();
+  //     }
+  //   }
+  // }, [isActive]);
+
   useEffect(() => {
-    //If counter reaches 0 then check
-    if (counter <= 0) {
-      //Check if all lights are out then compare current score with high score
-      if (hasWon()) {
-        //If all lights are out is the players high score more than the current
-        //If so then set that score
-        if (highScore < currentScore) {
-          setHighScore(currentScore);
+    const playerWon = hasWon();
+    const convertedScore = currentScore * 100
+    const isNewHighScore = convertedScore > highScore;
+  
+    if (!isActive) {
+      setDisabled(true);
+      if (playerWon) {
+        setCurrentScore(10000);
+        if (isNewHighScore) {
+          setHighScore(convertedScore);
         }
-      }
-      //Else if timer is at 0 and the player hasn't won then reset player score
-      else {
+      } else {
+        if (isNewHighScore) {
+          setHighScore(convertedScore);
+          persistScoreToDatabase();
+        }
         setCurrentScore(0);
-        setIsActive(false);
       }
+    } else if (playerWon && isNewHighScore) {
+      setCurrentScore(10000);
+      setHighScore(currentScore);
+      persistScoreToDatabase();
     }
-
-    if (hasWon()) {
-      setCurrentScore(5000);
-      if (highScore < currentScore) {
-        setHighScore(currentScore);
-      }
-
-      if (!isActive) {
-        const updateScore = async () => {
-          const response = await axios.put(
-            "http://localhost:8000/user/game/score",
-            { userId: user.userId, gameName: "blackout", score: highScore }
-          );
-        };
-        updateScore();
-      }
-    }
-  }, [counter, isActive]);
+  }, [isActive]);
+  
+  const persistScoreToDatabase = () => {
+    const updateScore = async () => {
+      let test = { userId: user.userId, gameName: "blackout", score: highScore}
+      console.log(test)
+      console.log("Send to DB")
+      const response = await axios.put(
+        "http://localhost:8000/user/game/score",
+        { userId: user.userId, gameName: "blackout", score: highScore}
+      );
+    };
+    updateScore();
+  };
+  
 
   useEffect(() => {
     setCurrentScore(Math.ceil((isLightsOffCount / (size * size)) * 100));
   }, [isLightsOffCount]);
+
+  const setInactive = () => {
+    setIsActive(false);
+  }
 
   /** randomLight: returns random boolean */
   function randomLight() {
@@ -86,12 +136,27 @@ function Board() {
   }
 
   //create size*size matrix state, randomly setting isOn to true/false
-  const lightsGrid = Array.from({ length: size }).map(
-    (row) =>
-      (row = Array.from({ length: size }).map((cell) => (cell = randomLight())))
+  // const lightsGrid = Array.from({ length: size }).map(
+  //   (row) =>
+  //     (row = Array.from({ length: size }).map((cell) => (cell = randomLight())))
+  // );
+
+  const generateLightsGrid = (size) =>
+  Array.from({ length: size }).map((row) =>
+    Array.from({ length: size }).map((cell) => randomLight())
   );
 
-  const [board, setBoard] = useState({ grid: lightsGrid });
+  const [board, setBoard] = useState({ grid: generateLightsGrid(size) });
+
+  const resetGame = () => {
+    setDisabled(false);
+    setIsActive(true)
+    setBoard({ grid: generateLightsGrid(size) });
+    setCurrentScore(0);
+    setCounter(120);
+    setResetTimer(true)
+    setTimeout(() => setResetTimer(false), 0);
+  }
 
   /** toggleLight: toggles a single light on/off in the state */
   const toggleLight = function (cellIndex) {
@@ -139,8 +204,8 @@ function Board() {
     //setscore to 5000 as the maximum high score
     const lightsOut = board.grid.every((row) => row.every((cell) => cell));
 
-    if (isActive && lightsOut) {
-      setIsActive(false);
+    if (lightsOut) {
+      setInactive();
     }
 
     return lightsOut ? true : false;
@@ -156,6 +221,7 @@ function Board() {
             cellIndex={[rowIndex, colIndex].join("")}
             isOn={board.grid[rowIndex][colIndex]}
             toggleLight={toggleAllLights}
+            disabled={disabled}
           />
         ))}
       </div>
@@ -171,26 +237,26 @@ function Board() {
             FDM<span className="App-orange">&#9733;</span>
           </h1>
           <div className="details-box">
-            <button className="resetButton">
+            <button className="resetButton" onClick={resetGame}>
               {isActive ? "Reset Game" : "New Game"}
             </button>
             <div className="score-box">
               <div className="score-header">Time: </div>
               <Timer
                 isActive={isActive}
-                setIsActive={setIsActive}
-                counter={counter}
-                setCounter={setCounter}
+                setIsActive={setInactive}
+                initialCounter={counter}
+                resetTimer={resetTimer}
               />
             </div>
             <div className="score-box">
               <div className="score-header">SCORE: </div>
               <div>{currentScore}%</div>
             </div>
-            <div className="score-box">
+            {highScore && <div className="score-box">
               <div className="score-header">BEST: </div>
-              <div>{highScore || 0}</div>
-            </div>
+              <div>{highScore}</div>
+            </div>}
           </div>
           <div className="w-full mb-2">
             <div className="max-w-lg">

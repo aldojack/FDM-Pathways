@@ -16,9 +16,10 @@ export default function BoardView() {
     const [user, setUser] = useState(null);
     const [board, setBoard] = useState(new Board());
     const [isActive, setIsActive] = useState(true);
-    const [counter, setCounter] = useState(120);
+    const [counter, setCounter] = useState(10);
     const [currentScore, setCurrentScore] = useState(board.score);
     const [highScore, setHighScore] = useState(0);
+    const [resetTimer, setResetTimer] = useState(false);
 
     useEffect(() => {
       if(AuthToken){
@@ -77,7 +78,7 @@ export default function BoardView() {
 
     
     //If time runs out and is no longer playing then stop movement
-    if(counter <=0 && !isActive)
+    if(!isActive)
     {
       useEvent('keydown', handleKeyDown, true)
     }
@@ -102,6 +103,8 @@ export default function BoardView() {
       setIsActive(true)
       setBoard(new Board());
       setCounter(120);
+      setResetTimer(true);
+      setTimeout(() => setResetTimer(false), 0);
     }
 
   return (
@@ -111,7 +114,7 @@ export default function BoardView() {
           <button className='resetButton' onClick={resetGame}>{isActive ? "Reset Game" : "New Game"}</button>
           <div className='score-box'>
             <div className='score-header'>Time: </div>
-            <Timer isActive={isActive} setIsActive={setIsActive} counter={counter} setCounter={setCounter}/>
+            <Timer isActive={isActive} setIsActive={setIsActive} initialCounter={counter} resetTimer={resetTimer}/>
           </div>
           <div className='score-box'>
             <div className='score-header'>SCORE: </div>
