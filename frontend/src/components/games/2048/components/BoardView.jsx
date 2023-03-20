@@ -16,7 +16,7 @@ export default function BoardView() {
     const [user, setUser] = useState(null);
     const [board, setBoard] = useState(new Board());
     const [isActive, setIsActive] = useState(true);
-    const [counter, setCounter] = useState(10);
+    const [counter, setCounter] = useState(120);
     const [currentScore, setCurrentScore] = useState(board.score);
     const [highScore, setHighScore] = useState(0);
     const [resetTimer, setResetTimer] = useState(false);
@@ -49,14 +49,21 @@ export default function BoardView() {
       }
       if(!isActive)
       {
-        const updateScore = async() => {
-          const response = await axios.put('http://localhost:8000/user/game/score', 
-            { userId: user.userId, 
-              gameName: "game2048", 
-              score: highScore
-            })
+        const updateScore = async () => {
+          try {
+            const response = await axios.put('http://localhost:8000/user/game/score', {
+              userId: user.userId,
+              gameName: 'game2048',
+              score: highScore,
+            });
+            console.log(response.data);
+          } catch (error) {
+            console.error(error);
+            // Handle error here
           }
-          updateScore();
+        };
+        updateScore();
+        
       }
     }
     else{

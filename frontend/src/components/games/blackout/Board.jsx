@@ -13,7 +13,7 @@ function Board() {
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
   const AuthToken = cookies.AuthToken;
   const [user, setUser] = useState(null);
-  const [counter, setCounter] = useState(5);
+  const [counter, setCounter] = useState(120);
   const [currentScore, setCurrentScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
   const [isActive, setIsActive] = useState(true);
@@ -91,33 +91,34 @@ function Board() {
         setCurrentScore(10000);
         if (isNewHighScore) {
           setHighScore(convertedScore);
+          persistScoreToDatabase(convertedScore); // pass convertedScore directly
         }
       } else {
         if (isNewHighScore) {
           setHighScore(convertedScore);
-          persistScoreToDatabase();
+          persistScoreToDatabase(convertedScore); // pass convertedScore directly
         }
         setCurrentScore(0);
       }
     } else if (playerWon && isNewHighScore) {
       setCurrentScore(10000);
-      setHighScore(currentScore);
-      persistScoreToDatabase();
+      setHighScore(convertedScore);
+      persistScoreToDatabase(convertedScore); // pass convertedScore directly
     }
+    
   }, [isActive]);
   
-  const persistScoreToDatabase = () => {
+  const persistScoreToDatabase = (score) => {
     const updateScore = async () => {
-      let test = { userId: user.userId, gameName: "blackout", score: highScore}
-      console.log(test)
-      console.log("Send to DB")
+      console.log("Send to DB");
       const response = await axios.put(
         "http://localhost:8000/user/game/score",
-        { userId: user.userId, gameName: "blackout", score: highScore}
+        { userId: user.userId, gameName: "blackout", score: score }
       );
     };
     updateScore();
   };
+  
   
 
   useEffect(() => {

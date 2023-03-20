@@ -23,7 +23,7 @@ function CardsView() {
   const [choiceOne, setChoiceOne] = useState(null);
   const [choiceTwo, setChoiceTwo] = useState(null);
   const [disabled, setDisabled] = useState(false);
-  const [counter, setCounter] = useState(5);
+  const [counter, setCounter] = useState(120);
   const [currentScore, setCurrentScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
   const [isActive, setIsActive] = useState(true);
@@ -65,16 +65,32 @@ function CardsView() {
     //Also checks if the current score  is greater  than high score then updates
 
     if (!isActive) {
+      let newHighScore;
       setDisabled(true);
       if (currentScore > highScore) {
+        console.log(`High score is:  ${currentScore}`)
+        newHighScore = currentScore
         setHighScore(currentScore);
       }
 
       const updateScore = async () => {
-        const response = await axios.put(
-          "http://localhost:8000/user/game/score",
-          { userId: user.userId, gameName: "pairs", score: highScore }
-        );
+        try {
+          const test = {
+            userId: user.userId,
+            gameName: 'pairs',
+            score: newHighScore,
+          }
+
+          console.log(test)
+          const response = await axios.put('http://localhost:8000/user/game/score', {
+            userId: user.userId,
+            gameName: 'pairs',
+            score: newHighScore,
+          });
+        } catch (error) {
+          console.error(error);
+          // Handle error here
+        }
       };
       updateScore();
     }
