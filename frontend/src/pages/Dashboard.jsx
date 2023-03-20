@@ -4,18 +4,6 @@ export default function Dashboard({ User }) {
     return <p key={key}>{key}: {value}</p>
   });
 
-  const suggestStream = () => {
-    let suggestedStream = '';
-
-    /*
-      Maybe look into grading the games based on scores and adding hasPlayed
-
-      If all games have been played then loop through the potential grades [A+, A, B, C, D]
-
-      If more than 1 game have the same high grade then show a suggesting for a combination of the games
-    */
-  }
-
   return (
     <div className="w-full">
     <main className="max-w-5xl mx-auto text-center">
@@ -30,7 +18,7 @@ export default function Dashboard({ User }) {
         {highScoresList}
       </div>
       <h2 className="text-1xl font-bold">Suggested Stream</h2>
-      <p>Pending</p>
+      <p>{User.suggestedCareerPath}</p>
     </div>
     </main>
     </div>

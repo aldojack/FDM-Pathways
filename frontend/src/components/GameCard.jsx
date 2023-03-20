@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 export default function GameCard({AuthToken, PlaceholderImg, Name, Description}) {
   
   return (
-    <div className="game sm:col-span-12 md:col-span-6 lg:col-span-4 justify-self-center">
+    <div className="sm:col-span-12 md:col-span-6 lg:col-span-4 justify-self-center rounded-xl h-full w-60">
       <div className='image relative w-full h-full'>
           <img src={PlaceholderImg} className="block h-full"/>
           <div className='image_overlay p-4 opacity-0 absolute top-0 left-0 w-full h-full bg-black/60 text-white flex flex-col items-center justify-center transition-opacity duration-75 hover:opacity-100'>

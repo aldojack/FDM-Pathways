@@ -20,11 +20,6 @@ body{
     text-shadow: 2px 2px 2px #202025;
 }
 
-.game{
-    height: 250px;
-    border: 1px solid black;
-    width: 250px;
-}
 
 .auth-modal input[type=password], .auth-modal input[type=email], .auth-modal input[type=text] {
     padding: 8px;
