@@ -12,9 +12,6 @@ const port = 8000;
 app.use(cors());
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Hello from express");
-});
 
 app.post("/register", async (req, res) => {
   const client = new MongoClient(uri);
