@@ -39,7 +39,7 @@ export default function Nav({setShowModal, showModal,setIsSignUp, cookies, remov
             {AuthToken && 
             <>
                 <li>
-                    <Link to="/dashboard" className='hover:underline focus:underline cursor-pointer'>Account</Link>
+                    <Link to="/dashboard" className='hover:underline focus:underline cursor-pointer'>Dashboard</Link>
                 </li>
                 <li>
                     <button className="hover:underline focus:underline cursor-pointer" onClick={logout}>Logout</button>

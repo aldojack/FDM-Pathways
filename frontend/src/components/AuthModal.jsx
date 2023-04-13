@@ -39,9 +39,6 @@ const AuthModal = ({setShowModal, isSignUp}) => {
             if(success) {
                 setShowModal(false);
                 window.location.reload();
-                //maybe use navigate
-                // return redirect('/');
-                // return redirect('/dashboard');
             }
 
         } catch(error){

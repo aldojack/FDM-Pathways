@@ -6,12 +6,12 @@ import Timer from "../../Timer";
 import axios from "axios";
 
 const cardImages = [
-  { src: "/img/helmet-1.png", matched: false },
-  { src: "/img/potion-1.png", matched: false },
-  { src: "/img/ring-1.png", matched: false },
-  { src: "/img/scroll-1.png", matched: false },
-  { src: "/img/shield-1.png", matched: false },
-  { src: "/img/sword-1.png", matched: false },
+  { src: "/img/Card_robot.png", matched: false },
+  { src: "/img/Card_tablet.png", matched: false },
+  { src: "/img/Card_bits.png", matched: false },
+  { src: "/img/Card_cloud.png", matched: false },
+  { src: "/img/Card_techline.png", matched: false },
+  { src: "/img/Card_server.png", matched: false },
 ];
 
 function CardsView() {
