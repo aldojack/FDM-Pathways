@@ -222,6 +222,10 @@ Array.from({ length: size }).map((row) =>
     // return board.grid.every((row) => row.every((cell) => cell));
   }
 
+  const saveGame = () => {
+    setIsActive(false)
+  }
+
   const gridDisplay = board.grid.map((row, rowIndex) => {
     return (
       <div className="inline-block w-auto" key={rowIndex}>
@@ -246,7 +250,7 @@ Array.from({ length: size }).map((row) =>
           <h1 className="App-h1 text-center">
             FDM<span className="App-orange">&#9733;</span>
           </h1>
-          <div className="details-box">
+          <div className="details-box  w-2/3 min-w-[580px] m-auto items-stretch">
             <button className="resetButton" onClick={resetGame}>
               {isActive ? "Reset Game" : "New Game"}
             </button>
@@ -267,6 +271,11 @@ Array.from({ length: size }).map((row) =>
               <div className="score-header">BEST: </div>
               <div>{highScore}</div>
             </div>}
+            {isActive && (
+          <button className="resetButton" onClick={saveGame}>
+            Save & Exit
+          </button>
+          )}
           </div>
           <div className="w-full mb-2">
             <div className="max-w-lg">

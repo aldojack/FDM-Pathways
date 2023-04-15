@@ -114,10 +114,14 @@ export default function BoardView() {
       setTimeout(() => setResetTimer(false), 0);
     }
 
+    const saveGame = () => {
+      setIsActive(false)
+    }
+
   return (
     <div className='body'>
       <div>
-        <div className='details-box'>
+        <div className='details-box w-2/3 min-w-[580px] m-auto items-stretch'>
           <button className='resetButton' onClick={resetGame}>{isActive ? "Reset Game" : "New Game"}</button>
           <div className='score-box'>
             <div className='score-header'>Time: </div>
@@ -131,8 +135,13 @@ export default function BoardView() {
             <div className='score-header'>BEST: </div>
             <div>{highScore}</div>
           </div>
+          {isActive && (
+          <button className="resetButton" onClick={saveGame}>
+            Save & Exit
+          </button>
+          )}
         </div>
-          <div className='board'>
+          <div className='board m-auto'>
             {cells}
             {tiles}
             <GameOverlay setIsActive={setIsActive} onRestart={resetGame} board={board}/>

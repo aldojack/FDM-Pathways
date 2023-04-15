@@ -181,6 +181,10 @@ function CardsView() {
     cardDelay();
   };
 
+  const saveGame = () => {
+    setIsActive(false)
+  }
+
   const cardDelay = () => {
     if (isActive) {
       setChoiceOne(null);
@@ -204,7 +208,7 @@ function CardsView() {
   return (
     <div className="body">
       <div>
-        <div className="details-box w-1/2 m-auto items-stretch">
+        <div className="details-box w-2/3 min-w-[580px] m-auto items-stretch">
           <button className="resetButton" onClick={resetGame}>
             {isActive ? "Reset Game" : "New Game"}
           </button>
@@ -225,11 +229,16 @@ function CardsView() {
             <div className="score-header">BEST: </div>
             <div>{highScore}</div>
           </div>
+          {isActive && (
+          <button className="resetButton" onClick={saveGame}>
+            Save & Exit
+          </button>
+          )}
         </div>
         <div className="card-grid mt-10 grid grid-cols-4 gap-5">
           {cardsComponent}
         </div>
-        <p>Turns: {turns}</p>
+        {/* <p>Turns: {turns}</p> */}
       </div>
     </div>
   );
