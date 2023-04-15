@@ -64,7 +64,7 @@ export default function Dashboard() {
           {isLoading ? (
             <p>Loading...</p>
           ) : (
-            <div className="flex flex-col md:flex-row md:justify-between">
+            <div className="flex flex-col md:items-center md:justify-between">
               <div className="w-full md:w-1/3 mb-8 md:mb-0">
                 <h2 className="text-2xl font-bold mb-4 text-gray-700">
                   User Information

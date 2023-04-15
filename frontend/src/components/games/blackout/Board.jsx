@@ -5,14 +5,18 @@ import "./App.css";
 import Timer from "../../Timer";
 import Cell from "./Cell";
 
-//Set grid size
+//Set grid size and chance of a light on
 const size = 6;
-const chanceLightStartsOn = 0.25;
+const chanceLightStartsOn = 0.40;
+
+
+
 
 function Board() {
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
   const AuthToken = cookies.AuthToken;
   const [user, setUser] = useState(null);
+  const [won, setWon] = useState(false);
   const [counter, setCounter] = useState(120);
   const [currentScore, setCurrentScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
@@ -20,6 +24,21 @@ function Board() {
   const [isLightsOffCount, setIsLightsOffCount] = useState(0);
   const [resetTimer, setResetTimer] = useState(false);
   const [disabled, setDisabled] = useState(false);
+
+  /** randomLight: returns random boolean */
+  function randomLight() {
+    //Use if want to see all lights on
+    // return true;
+    return Math.random() < chanceLightStartsOn;
+  }
+
+const generateLightsGrid = (size) =>
+Array.from({ length: size }).map((row) =>
+  Array.from({ length: size }).map((cell) => randomLight())
+);
+
+
+  const [board, setBoard] = useState({ grid: generateLightsGrid(size) });
 
 
   //Will get the user and update the user state and high score
@@ -106,7 +125,7 @@ function Board() {
       persistScoreToDatabase(convertedScore); // pass convertedScore directly
     }
     
-  }, [isActive]);
+  }, [isActive, board.grid]);
   
   const persistScoreToDatabase = (score) => {
     const updateScore = async () => {
@@ -127,27 +146,16 @@ function Board() {
 
   const setInactive = () => {
     setIsActive(false);
+    setWon(false);
   }
 
-  /** randomLight: returns random boolean */
-  function randomLight() {
-    //Use if want to see all lights on
-    // return true;
-    return Math.random() < chanceLightStartsOn;
-  }
 
   //create size*size matrix state, randomly setting isOn to true/false
   // const lightsGrid = Array.from({ length: size }).map(
   //   (row) =>
   //     (row = Array.from({ length: size }).map((cell) => (cell = randomLight())))
   // );
-
-  const generateLightsGrid = (size) =>
-  Array.from({ length: size }).map((row) =>
-    Array.from({ length: size }).map((cell) => randomLight())
-  );
-
-  const [board, setBoard] = useState({ grid: generateLightsGrid(size) });
+  
 
   const resetGame = () => {
     setDisabled(false);
@@ -203,10 +211,11 @@ function Board() {
   /** hasWon: checks if all lights are off */
   function hasWon() {
     //setscore to 5000 as the maximum high score
-    const lightsOut = board.grid.every((row) => row.every((cell) => cell));
+    const lightsOut = board.grid.every((row) => row.every((cell) => !cell));
+    console.log(lightsOut)
 
     if (lightsOut) {
-      setInactive();
+      setWon(true);
     }
 
     return lightsOut ? true : false;
@@ -270,8 +279,8 @@ function Board() {
             </div>
           </div>
           <div className="flex flex-col rounded-lg p-1 border-2 border-solid border-black items-center max-w-lg">
-            {hasWon() ? (
-              <div className="text-4xl tracking-wider mb-0 py-0 px-5 text-black h-96 w-full flex flex-col items-center justify-center">
+            {won ? (
+              <div className="text-4xl tracking-wider mb-0 py-0 px-5 text-vividviolet bg-black h-96 w-full flex flex-col items-center justify-center">
                 <p className="font-bold">Congratulations!</p>
                 <p className="text-2xl mt-4">Maximum score 5000 achieved</p>
               </div>
